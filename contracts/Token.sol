@@ -1,10 +1,6 @@
-/**
- *Submitted for verification at BscScan.com on 2021-11-25
-*/
-
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.4;
+pragma solidity 0.8.4;
 
 abstract contract Context {
     function _msgSender() internal view virtual returns (address payable) {
@@ -201,8 +197,6 @@ contract Ownable is Context {
     }
 }
 
-// pragma solidity >=0.5.0;
-
 interface IUniswapV2Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
@@ -219,8 +213,6 @@ interface IUniswapV2Factory {
     function setFeeToSetter(address) external;
 }
 
-
-// pragma solidity >=0.5.0;
 
 interface IUniswapV2Pair {
     event Approval(address indexed owner, address indexed spender, uint value);
@@ -270,8 +262,6 @@ interface IUniswapV2Pair {
 
     function initialize(address, address) external;
 }
-
-// pragma solidity >=0.6.2;
 
 interface IUniswapV2Router01 {
     function factory() external pure returns (address);
@@ -367,10 +357,6 @@ interface IUniswapV2Router01 {
     function getAmountsIn(uint amountOut, address[] calldata path) external view returns (uint[] memory amounts);
 }
 
-
-
-// pragma solidity >=0.6.2;
-
 interface IUniswapV2Router02 is IUniswapV2Router01 {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
@@ -416,11 +402,13 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
     using SafeMath for uint256;
     using Address for address;
     
-    address payable public marketingAddress = payable(0x000000000000000000000000000000000000dEaD); // Marketing Address
+    address payable public marketingAddress; // Marketing Address
     address public immutable deadAddress = 0x000000000000000000000000000000000000dEaD;
     mapping (address => uint256) private _rOwned;
     mapping (address => uint256) private _tOwned;
     mapping (address => mapping (address => uint256)) private _allowances;
+
+    mapping (address => bool) private _blacklist;
 
     mapping (address => bool) private _isExcludedFromFee;
 
@@ -435,7 +423,6 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
     string private _name = "SNOWPRINCE";
     string private _symbol = "SNOWPRINCE";
     uint8 private _decimals = 9;
-
 
     uint256 public _taxFee = 2;
     uint256 private _previousTaxFee = _taxFee;
@@ -456,7 +443,7 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
     bool public swapAndLiquifyEnabled = true;
     bool public buyBackEnabled = true;
 
-    
+    event SetBlackList(address indexed holder, bool state);
     event RewardLiquidityProviders(uint256 tokenAmount);
     event BuyBackEnabledUpdated(bool enabled);
     event SwapAndLiquifyEnabledUpdated(bool enabled);
@@ -482,15 +469,19 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
         inSwapAndLiquify = false;
     }
     
-    constructor () {
+    /**
+     * @param _marketingAddress Marketing Address
+     * @param _router Router Address(BSC MAINNET(Pancake): 0x10ED43C718714eb63d5aA57B78B54704E256024E)
+     */
+    constructor (address _marketingAddress, address _router) {
         _rOwned[_msgSender()] = _rTotal;
         
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(_router);
         uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
             .createPair(address(this), _uniswapV2Router.WETH());
 
         uniswapV2Router = _uniswapV2Router;
-
+        marketingAddress = payable(_marketingAddress);
         
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
@@ -631,6 +622,8 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
         require(amount > 0, "Transfer amount must be greater than zero");
+        require(!_blacklist[from] && !_blacklist[to], "Can't transfer between blacklist");
+
         if(from != owner() && to != owner()) {
             require(amount <= _maxTxAmount, "Transfer amount exceeds the maxTxAmount.");
         }
@@ -936,7 +929,17 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
     function transferToAddressETH(address payable recipient, uint256 amount) private {
         recipient.transfer(amount);
     }
+
+    function setBlackList(address _holder, bool _state) external onlyOwner {
+        _blacklist[_holder] = _state;
+
+        emit SetBlackList(_holder, _state);
+    }
+
+    function isBlackList(address _holder) external view returns(bool) {
+        return _blacklist[_holder];
+    }
     
-     //to recieve ETH from uniswapV2Router when swaping
+    // to recieve ETH from uniswapV2Router when swaping
     receive() external payable {}
 }
