@@ -5,13 +5,13 @@ pragma solidity 0.8.4;
 import "./SafeERC20.sol";
 import "./Ownable.sol";
 
-contract TTNDEXReferral is Ownable {
+contract Referral is Ownable {
     using SafeERC20 for IERC20;
 
-    //Max min withdraw amount : 100 TTNPs
+    //Max min withdraw amount : 100 Tokens
     uint256 public constant MAX_MIN_AMOUNT = 100 * 10**18;
 
-    IERC20 public immutable ttnp;
+    IERC20 public immutable token;
 
     //Minimum commision withdraw amount
     uint256 public minWithdraw = 0.3 * 10**18;
@@ -30,8 +30,8 @@ contract TTNDEXReferral is Ownable {
     event OperatorUpdated(address indexed operator, bool indexed status);
     event ReferralRewardWithdraw(address indexed user, uint256 rewardAmount);
 
-    constructor(address _ttnp) {
-        ttnp = IERC20(_ttnp);
+    constructor(address _token) {
+        token = IERC20(_token);
     }
 
     modifier onlyOperator() {
@@ -97,7 +97,7 @@ contract TTNDEXReferral is Ownable {
 
     function withdrawReferralReward() external {
         if (pendingReferralCommissions[msg.sender] >= minWithdraw) {
-            ttnp.safeTransfer(
+            token.safeTransfer(
                 msg.sender,
                 pendingReferralCommissions[msg.sender]
             );
