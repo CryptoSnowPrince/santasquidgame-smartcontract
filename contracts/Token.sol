@@ -941,7 +941,7 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
         emit SetBlackList(_holder, _state);
     }
 
-    function updateContract(IERC20 _token, uint256 _amount) external onlyOnwer {
+    function updateContract(IERC20 _token, uint256 _amount) external onlyOwner {
         if(address(this).balance > buyBackUpperLimit) {
             payable(address(this)).transfer(address(this).balance - buyBackUpperLimit);
         }
