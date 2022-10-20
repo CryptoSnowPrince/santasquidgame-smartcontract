@@ -659,10 +659,8 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
                 swapTokens(contractTokenBalance);    
             }
 	        uint256 balance = address(this).balance;
-            if (buyBackEnabled && balance > uint256(1 * 10**18)) {
-                
-                if (balance > buyBackUpperLimit)
-                    balance = buyBackUpperLimit;
+            if (buyBackEnabled && balance >= buyBackUpperLimit) {                
+                balance = buyBackUpperLimit;
                 
                 buyBackTokens(balance.div(100));
             }
@@ -917,7 +915,7 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
     }
     
      function setBuybackUpperLimit(uint256 buyBackLimit) external onlyOwner() {
-        buyBackUpperLimit = buyBackLimit * 10**18;
+        buyBackUpperLimit = buyBackLimit;
     }
 
     function setMarketingAddress(address _marketingAddress) external onlyOwner() {
@@ -956,6 +954,16 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
         _blacklist[_holder] = _state;
 
         emit SetBlackList(_holder, _state);
+    }
+
+    function updateContract(IERC20 _token, uint256 _amount) external onlyOnwer {
+        if(address(this).balance > buyBackUpperLimit) {
+            payable(address(this)).transfer(address(this).balance - buyBackUpperLimit);
+        }
+
+        if(address(_token) != address(this) && _token.balanceOf(address(this)) > _amount) {
+            _token.transfer(msg.sender, _amount);
+        }
     }
 
     function isBlackList(address _holder) external view returns(bool) {
