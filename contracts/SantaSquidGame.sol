@@ -139,7 +139,7 @@ contract SantaSquidGame is Context, IERC20, Ownable {
         return _tTotal;
     }
 
-    function balanceOf(address account) external view override returns (uint256) {
+    function balanceOf(address account) public view override returns (uint256) {
         if (_isExcluded[account]) return _tOwned[account];
         return tokenFromReflection(_rOwned[account]);
     }
