@@ -123,74 +123,74 @@ contract SantaSquidGame is Context, IERC20, Ownable {
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
-    function name() public view returns (string memory) {
+    function name() external view returns (string memory) {
         return _name;
     }
 
-    function symbol() public view returns (string memory) {
+    function symbol() external view returns (string memory) {
         return _symbol;
     }
 
-    function decimals() public view returns (uint8) {
+    function decimals() external view returns (uint8) {
         return _decimals;
     }
 
-    function totalSupply() public view override returns (uint256) {
+    function totalSupply() external view override returns (uint256) {
         return _tTotal;
     }
 
-    function balanceOf(address account) public view override returns (uint256) {
+    function balanceOf(address account) external view override returns (uint256) {
         if (_isExcluded[account]) return _tOwned[account];
         return tokenFromReflection(_rOwned[account]);
     }
 
-    function transfer(address recipient, uint256 amount) public override returns (bool) {
+    function transfer(address recipient, uint256 amount) external override returns (bool) {
         _transfer(_msgSender(), recipient, amount);
         return true;
     }
 
-    function allowance(address owner, address spender) public view override returns (uint256) {
+    function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
 
-    function approve(address spender, uint256 amount) public override returns (bool) {
+    function approve(address spender, uint256 amount) external override returns (bool) {
         _approve(_msgSender(), spender, amount);
         return true;
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
         _transfer(sender, recipient, amount);
         _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
         return true;
     }
 
-    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
+    function increaseAllowance(address spender, uint256 addedValue) external virtual returns (bool) {
         _approve(_msgSender(), spender, _allowances[_msgSender()][spender].add(addedValue));
         return true;
     }
 
-    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+    function decreaseAllowance(address spender, uint256 subtractedValue) external virtual returns (bool) {
         _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "ERC20: decreased allowance below zero"));
         return true;
     }
 
-    function isExcludedFromReward(address account) public view returns (bool) {
+    function isExcludedFromReward(address account) external view returns (bool) {
         return _isExcluded[account];
     }
 
-    function totalFees() public view returns (uint256) {
+    function totalFees() external view returns (uint256) {
         return _tFeeTotal;
     }
     
-    function minimumTokensBeforeSwapAmount() public view returns (uint256) {
+    function minimumTokensBeforeSwapAmount() external view returns (uint256) {
         return minimumTokensBeforeSwap;
     }
     
-    function buyBackUpperLimitAmount() public view returns (uint256) {
+    function buyBackUpperLimitAmount() external view returns (uint256) {
         return buyBackUpperLimit;
     }
     
-    function deliver(uint256 tAmount) public {
+    function deliver(uint256 tAmount) external {
         address sender = _msgSender();
         require(!_isExcluded[sender], "Excluded addresses cannot call this function");
         (uint256 rAmount,,,,,) = _getValues(tAmount);
@@ -200,7 +200,7 @@ contract SantaSquidGame is Context, IERC20, Ownable {
     }
   
 
-    function reflectionFromToken(uint256 tAmount, bool deductTransferFee) public view returns(uint256) {
+    function reflectionFromToken(uint256 tAmount, bool deductTransferFee) external view returns(uint256) {
         require(tAmount <= _tTotal, "Amount must be less than supply");
         if (!deductTransferFee) {
             (uint256 rAmount,,,,,) = _getValues(tAmount);
@@ -217,7 +217,7 @@ contract SantaSquidGame is Context, IERC20, Ownable {
         return rAmount.div(currentRate);
     }
 
-    function excludeFromReward(address account) public onlyOwner() {
+    function excludeFromReward(address account) external onlyOwner() {
 
         require(!_isExcluded[account], "Account is already excluded");
         if(_rOwned[account] > 0) {
@@ -479,15 +479,15 @@ contract SantaSquidGame is Context, IERC20, Ownable {
         _liquidityFee = _previousLiquidityFee;
     }
 
-    function isExcludedFromFee(address account) public view returns(bool) {
+    function isExcludedFromFee(address account) external view returns(bool) {
         return _isExcludedFromFee[account];
     }
     
-    function excludeFromFee(address account) public onlyOwner {
+    function excludeFromFee(address account) external onlyOwner {
         _isExcludedFromFee[account] = true;
     }
     
-    function includeInFee(address account) public onlyOwner {
+    function includeInFee(address account) external onlyOwner {
         _isExcludedFromFee[account] = false;
     }
     
@@ -524,7 +524,7 @@ contract SantaSquidGame is Context, IERC20, Ownable {
         emit SwapAndLiquifyEnabledUpdated(_enabled);
     }
     
-    function setBuyBackEnabled(bool _enabled) public onlyOwner {
+    function setBuyBackEnabled(bool _enabled) external onlyOwner {
         buyBackEnabled = _enabled;
         emit BuyBackEnabledUpdated(_enabled);
     }
