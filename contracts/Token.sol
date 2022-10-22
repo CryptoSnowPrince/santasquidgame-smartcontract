@@ -420,7 +420,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-contract SNOWPRINCE is Context, IERC20, Ownable {
+contract SantaSquidGame is Context, IERC20, Ownable {
     using SafeMath for uint256;
     using Address for address;
     
@@ -442,8 +442,8 @@ contract SNOWPRINCE is Context, IERC20, Ownable {
     uint256 private _rTotal = (MAX - (MAX % _tTotal));
     uint256 private _tFeeTotal;
 
-    string private _name = "SNOWPRINCE";
-    string private _symbol = "SNOWPRINCE";
+    string private _name = "SantaSquidGame";
+    string private _symbol = "SSG";
     uint8 private _decimals = 9;
 
     uint256 public _taxFee = 2;
