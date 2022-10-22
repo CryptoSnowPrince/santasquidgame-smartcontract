@@ -7,8 +7,6 @@ import "./utils/Ownable.sol";
 import "./utils/ReentrancyGuard.sol";
 import "./utils/Referral.sol";
 
-// MasterChef is the master of Main. He can make Main and he is a fair guy.
-//
 // Note that it's ownable and the owner wields tremendous power. The ownership
 // will be transferred to a governance smart contract once Main is sufficiently
 // distributed and the community can show to govern itself.
@@ -19,7 +17,7 @@ contract StakingVault is Ownable, ReentrancyGuard {
 
     // Info of each user.
     struct UserInfo {
-        uint256 amount;         // How many LP tokens the user has provided.
+        uint256 amount;         // How many tokens the user has provided.
         uint256 rewardDebt;     // Reward debt. See explanation below.
 
         // We do some fancy math here. Basically, any point in time, the amount of Tokens
@@ -27,7 +25,7 @@ contract StakingVault is Ownable, ReentrancyGuard {
         //
         //   pending reward = (user.amount * pool.accTokenPerShare) - user.rewardDebt
         //
-        // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
+        // Whenever a user deposits or withdraws tokens to a pool. Here's what happens:
         //   1. The pool's `accTokenPerShare` (and `lastRewardBlock`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `amount` gets updated.
@@ -118,7 +116,7 @@ contract StakingVault is Ownable, ReentrancyGuard {
         pool.lastRewardBlock = block.number;
     }
 
-    // Deposit LP tokens to MasterChef for Main allocation.
+    // Deposit tokens to StakingVault for Main allocation.
     function deposit(uint256 _amount, address _referrer) external nonReentrant {
         PoolInfo storage pool = poolInfo;
         UserInfo storage user = userInfo[msg.sender];
@@ -136,7 +134,7 @@ contract StakingVault is Ownable, ReentrancyGuard {
         emit Deposit(msg.sender, _amount);
     }
 
-    // Withdraw LP tokens from MasterChef.
+    // Withdraw tokens from StakingVault.
     function withdraw(uint256 _amount) external nonReentrant {
         PoolInfo storage pool = poolInfo;
         UserInfo storage user = userInfo[msg.sender];
