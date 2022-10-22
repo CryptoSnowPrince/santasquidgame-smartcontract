@@ -456,7 +456,7 @@ contract SantaSquidGame is Context, IERC20, Ownable {
     
     uint256 public _maxTxAmount = 3000000 * 10**6 * 10**9;
     uint256 private minimumTokensBeforeSwap = 200000 * 10**6 * 10**9; 
-    uint256 private buyBackUpperLimit = 1 * 10**18;
+    uint256 private buyBackUpperLimit = 1 * 10**18; // ETH Decimals
 
     IUniswapV2Router02 public immutable uniswapV2Router;
     address public immutable uniswapV2Pair;

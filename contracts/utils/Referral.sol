@@ -9,12 +9,12 @@ contract Referral is Ownable {
     using SafeERC20 for IERC20;
 
     //Max min withdraw amount : 100 Tokens
-    uint256 public constant MAX_MIN_AMOUNT = 100 * 10**18;
+    uint256 public constant MAX_MIN_AMOUNT = 100 * 10**9; // Token Decimals: 9
 
     IERC20 public immutable token;
 
-    //Minimum commision withdraw amount
-    uint256 public minWithdraw = 0.3 * 10**18;
+    //Minimum commision withdraw amount(default: 0.3 Tokens)
+    uint256 public minWithdraw = 3 * 10**(9 - 1); // Token Decimals: 9
 
     mapping(address => bool) public operators;
     mapping(address => address) public referrers; // user address => referrer address
