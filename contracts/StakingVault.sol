@@ -63,6 +63,12 @@ contract StakingVault is Ownable, ReentrancyGuard {
     event EmissionRateUpdated(address indexed caller, uint256 previousAmount, uint256 newAmount);
     event ReferralCommissionWithdrawn(address indexed user, address indexed referrer, uint256 commissionAmount);
 
+    /**
+     * @param _token Main token contract address
+     * @param _startBlock Start blocknumber of Staking Vault
+     * @param __rewardPerBlock Reward Amount of token per block
+     * @param _treasury Treasury Address
+     */
     constructor(
         IERC20 _token,
         uint256 _startBlock,
