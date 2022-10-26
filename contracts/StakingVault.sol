@@ -60,7 +60,6 @@ contract StakingVault is Ownable, ReentrancyGuard {
 
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
-    event EmergencyWithdraw(address indexed user, uint256 amount);
     event EmissionRateUpdated(address indexed caller, uint256 previousAmount, uint256 newAmount);
     event ReferralCommissionWithdrawn(address indexed user, address indexed referrer, uint256 commissionAmount);
 
