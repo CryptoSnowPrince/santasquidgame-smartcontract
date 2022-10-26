@@ -40,7 +40,7 @@ contract StakingVault is Ownable, ReentrancyGuard {
     }
 
     // The Main TOKEN
-    IERC20 public token;
+    IERC20 public immutable token;
     // Reward Treasury
     address public treasury;
     // Main tokens created per block.
@@ -52,7 +52,7 @@ contract StakingVault is Ownable, ReentrancyGuard {
     mapping(address => UserInfo) public userInfo;
 
     // Referral contract address.
-    Referral public referral;
+    Referral public immutable referral;
     // Referral commission rate in basis points.
     uint16 public referralCommissionRate = 1000;
     // Max referral commission rate: 20%.
@@ -72,10 +72,11 @@ contract StakingVault is Ownable, ReentrancyGuard {
         token = _token;
         _rewardPerBlock = __rewardPerBlock;
 
-        referral = new Referral(address(_token));
-        referral.updateOperator(address(this), true);
-        referral.transferOwnership(msg.sender);
+        Referral _referral = new Referral(address(_token));
+        _referral.updateOperator(address(this), true);
+        _referral.transferOwnership(msg.sender);
 
+        referral = _referral;
         treasury = _treasury;
         uint256 lastRewardBlock = block.number > _startBlock ? block.number : _startBlock;
         poolInfo = PoolInfo({
