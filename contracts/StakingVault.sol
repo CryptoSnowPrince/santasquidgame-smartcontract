@@ -8,11 +8,6 @@ import "./utils/ReentrancyGuard.sol";
 import "./utils/Pausable.sol";
 import "./utils/Referral.sol";
 
-// Note that it's ownable and the owner wields tremendous power. The ownership
-// will be transferred to a governance smart contract once Main is sufficiently
-// distributed and the community can show to govern itself.
-//
-// Have fun reading it. Hopefully it's bug-free. God bless.
 contract StakingVault is Ownable, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
 
@@ -187,7 +182,6 @@ contract StakingVault is Ownable, ReentrancyGuard, Pausable {
         _rewardPerBlock = __rewardPerBlock;
     }
 
-    // Update referral commission rate by the owner
     function setReferralCommissionRate(uint16 _referralCommissionRate) external onlyOwner {
         require(_referralCommissionRate <= MAXIMUM_REFERRAL_COMMISSION_RATE, "setReferralCommissionRate: invalid referral commission rate basis points");
         referralCommissionRate = _referralCommissionRate;

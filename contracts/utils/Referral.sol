@@ -67,12 +67,10 @@ contract Referral is Ownable {
         }
     }
 
-    // Get the referrer address that referred the user
     function getReferrer(address _user) public view returns (address) {
         return referrers[_user];
     }
 
-    // Update the status of the operator
     function updateOperator(address _operator, bool _status)
         external
         onlyOwner
