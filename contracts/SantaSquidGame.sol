@@ -105,9 +105,7 @@ contract SantaSquidGame is Context, IERC20, Ownable {
     
     /**
      * @param _marketingAddress Marketing Address
-     *                          YOUR_MARKETING_ADDRESS(The Safetest Address)
      * @param _router           Router Address
-     *                          BSC_MAINNET(Pancake): 0x10ED43C718714eb63d5aA57B78B54704E256024E
      */
     constructor (address _marketingAddress, address _router) {
         _rOwned[_msgSender()] = _rTotal;
